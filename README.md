@@ -45,3 +45,16 @@ A platform for playing planning poker
     ```
 
 Remember to replace `"your_secret_key_here"` with the actual secret key you want to use for your Django application.
+
+
+### Waiting for the game to start
+
+![alt text](https://i.imgur.com/k7V9ULR.png)
+
+### Game started
+
+![alt text](https://i.imgur.com/Zs8VlzG.png)
+
+### Cards revealed
+
+![alt text](https://i.imgur.com/vfIaoBl.png)
