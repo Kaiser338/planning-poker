@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Planning Poker{% endblock %}
+
+{% block extra_head %}
+    {{ game_id|json_script:"game-id" }}
+    {{ is_owner|json_script:"is-owner" }}
+{% endblock %}
+<body>
+    {% block content %}
+        <div class="min-h-screen flex flex-col justify-between">
+            <div hx-ext="ws" ws-connect="{{url}}">
+                {% if is_owner %}
+                    <div class="flex justify-center mt-4">
+                        <input type="hidden" id="game-id-var" name="var" value="{{ game_id }}">
+                        <button id="copy-room-link" class="bg-yellow-500 text-white p-2 rounded-md">Copy Room Link</button>
+                        <button id="reveal-cards" class="bg-green-500 text-white p-2 rounded-md ml-2">Reveal Cards</button>
+                        <button id="start-game" class="bg-blue-500 text-white p-2 rounded-md ml-2">Start Game</button>
+                        <button id="end-game" class="bg-red-500 text-white p-2 rounded-md ml-2">Restart Game</button>
+                    </div>
+                {% endif %}
+
+                <div id="players-info" class="flex flex-row justify-center items-center mt-4 space-y-2"></div>
+
+                {% with card_style="mx-2 text-blue-500 border-blue-500 border-solid border-2 p-6 h-28 min-w-20 rounded-lg text-xl" %}
+                    <div id="fibonacci-cards" class="flex justify-center mt-4 fixed bottom-0 left-0 right-0 bg-white p-4 shadow-md z-50">
+                        <div class = "flex flex-col text-center">
+                            <p id="game-status-text"></p>
+                            {% if status == "waiting" %}
+                                <p>Wait for the game start.</p>
+                            {% elif status == "started" %}
+                                <p>Choose your card.</p>
+                            {% elif status == "revealed" %}
+                                <p>Cards revealed, wait for next turn.</p>
+                            {% endif %}
+                            <div class = "flex flex-row justify-center items-center mt-4 space-y-2">
+                                {% for value in values %}
+                                    <button value="{{ value }}" class="{{ card_style }}">{{ value }}</button>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endwith %}
+            
+
+            </div>
+        </div>
+        
+        
+    {% endblock content %}
+</body>
+</html>

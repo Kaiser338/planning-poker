@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Planning Poker{% endblock %}
+
+{% block extra_head %}
+    {{ game_id|json_script:"game-id" }}
+{% endblock %}
+
+{% block content %}
+
+    <div class="h-screen flex flex-col items-center justify-center">
+        <input id="name" type="text" class="border-2 border-gray-300 p-2 flex items-center" placeholder="Name">
+        <input id="game-id-input" type="text" class="border-2 border-gray-300 p-2 flex items-center" placeholder="Room code">
+        <input id="password-input" type="password" class="border-2 border-gray-300 p-2 flex items-center" placeholder="Password">
+        <button id="join-game" class="bg-blue-500 text-white p-2 rounded-md mt-2 px-2">Join Game</button>
+        <button id="create-new" class="bg-green-500 text-white p-2 rounded-md mt-2 px-2">Create New</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('join-game').addEventListener('click', function() {
+                const username = document.getElementById('name').value;
+                const gameId = document.getElementById('game-id-input').value;
+                const password = document.getElementById('password-input').value;
+                
+                if (!username || !gameId || gameId.length < 10) {
+                    alert("Please enter a valid username and a valid game ID (10 characters).");
+                    return;
+                }
+
+                localStorage.setItem('username', username);
+                const url = `/game/?game_id=${gameId}&password=${password}`;
+                htmx.ajax('GET', url);
+            });
+
+            document.getElementById('create-new').addEventListener('click', function() {
+                const username = document.getElementById('name').value;
+                const password = document.getElementById('password-input').value;
+
+                if (!username) {
+                    alert("Please enter a valid username.");
+                    return;
+                }
+
+                localStorage.setItem('username', username);
+                const url = `/create/?password=${password}`;
+                htmx.ajax('GET', url);
+            });
+
+            const gameId = document.getElementById('game-id').textContent.replace(/["']/g, '');
+            document.getElementById('game-id-input').value = gameId;
+        });
+    </script>
+{% endblock %}
